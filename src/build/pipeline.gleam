@@ -154,7 +154,7 @@ fn bundle_spa() -> Nil {
     <> shim_path
     <> " --outfile "
     <> dist_dir
-    <> "/app.mjs --minify"
+    <> "/app.mjs --minify --target=node"
   case run_command(cmd) {
     0 -> Nil
     code -> {
