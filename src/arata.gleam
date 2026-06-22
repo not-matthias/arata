@@ -21,6 +21,7 @@ import data/post.{type Post}
 import data/project.{type Project}
 import data/sample_content
 import data/talk.{type Talk}
+import effect/codeblock as codeblock_effect
 import effect/theme as theme_effect
 import effect/toc as toc_effect
 import gleam/option.{type Option}
@@ -108,9 +109,9 @@ fn init(_flags: Nil) -> #(Model, effect.Effect(Msg)) {
   // The theme init effect reads localStorage + subscribes to matchMedia.
   let nav_effect =
     modem.init(fn(uri) { uri |> route.parse_route |> UserNavigatedTo })
-  let toc_effect = toc_effect_for(initial_route)
+  let post_effects = post_effects_for(initial_route)
   let theme_init = effect.map(theme_effect.init_theme(), theme_msg_to_msg)
-  let effects = effect.batch([nav_effect, toc_effect, theme_init])
+  let effects = effect.batch([nav_effect, post_effects, theme_init])
 
   #(model, effects)
 }
@@ -127,6 +128,9 @@ pub type Msg {
   ThemeLoaded(theme: theme_effect.Theme)
   /// The OS theme preference changed.
   SystemPrefersDarkChanged(prefers_dark: Bool)
+  /// A no-op message for effects that dispatch nothing (e.g. the code-block
+  /// enhancer, which only performs a side effect).
+  NoOp
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
@@ -136,7 +140,7 @@ fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
       // when landing on a single post (the previous observer watched the old
       // post's DOM, which is gone after the view re-renders).
       let model = Model(..model, route:, active_heading: option.None)
-      #(model, toc_effect_for(route))
+      #(model, post_effects_for(route))
     }
     TocActiveHeadingChanged(id) -> #(
       Model(..model, active_heading: option.Some(id)),
@@ -175,14 +179,21 @@ fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
       }
       #(model, eff)
     }
+    NoOp -> #(model, effect.none())
   }
 }
 
-/// The TOC observer effect to run for a route: `observe()` on a single post,
-/// `effect.none()` everywhere else.
-fn toc_effect_for(route: Route) -> effect.Effect(Msg) {
+/// Effects to run when landing on a route: on a single post, both the TOC
+/// IntersectionObserver (for scroll-driven heading highlighting) and the
+/// code-block enhancer (for copy buttons + language labels) are armed.
+/// Everywhere else, no effects.
+fn post_effects_for(route: Route) -> effect.Effect(Msg) {
   case route {
-    Post(_) -> effect.map(toc_effect.observe(), TocActiveHeadingChanged)
+    Post(_) ->
+      effect.batch([
+        effect.map(toc_effect.observe(), TocActiveHeadingChanged),
+        effect.map(codeblock_effect.enhance(), fn(_) { NoOp }),
+      ])
     _ -> effect.none()
   }
 }

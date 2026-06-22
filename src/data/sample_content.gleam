@@ -54,7 +54,7 @@ pub fn posts() -> List(Post) {
           </p>
         </blockquote>
         <h2 id='the-stack'>The stack</h2>
-        <pre><code>gleam add lustre
+        <pre><code data-lang='shell'>gleam add lustre
 gleam add modem
 gleam add --dev lustre_dev_tools</code></pre>
         <p>
@@ -95,7 +95,7 @@ gleam add --dev lustre_dev_tools</code></pre>
           initialising the router.
         </p>
         <h2 id='update'>update</h2>
-        <pre><code>fn update(model, msg) {
+        <pre><code data-lang='gleam'>fn update(model, msg) {
   case msg {
     UserNavigatedTo(route) -&gt; #(Model(..model, route:), effect.none())
   }
@@ -295,12 +295,12 @@ pub fn homepage() -> Page {
       <h2 id='quick-start'>Quick Start</h2>
       <ol>
         <li><strong>Scaffold the project:</strong>
-          <pre><code>gleam new my-blog --template javascript
+          <pre><code data-lang='shell'>gleam new my-blog --template javascript
 cd my-blog
 gleam add lustre modem</code></pre>
         </li>
         <li><strong>Start the dev server:</strong>
-          <pre><code>gleam run -m lustre/dev start</code></pre>
+          <pre><code data-lang='shell'>gleam run -m lustre/dev start</code></pre>
         </li>
         <li><strong>Write content</strong> as Gleam constants (a build pipeline
           arrives in Phase 17).</li>
