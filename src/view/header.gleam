@@ -24,19 +24,40 @@ import route.{type Route, Home, Links, Page, Post, Posts, Projects, Tag, Tags}
 /// `current_route` is passed in so the active menu item can be highlighted
 /// with an `active` class (apollo itself does not highlight the active nav
 /// item; this is a small arata addition for better wayfinding).
+///
+/// `on_toggle_menu` is wired to the mobile hamburger button (visible only
+/// below 992px via CSS). `mobile_menu_open` adds a `mobile-open` class to the
+/// `.right-nav` so the dropdown shows on mobile.
 pub fn view(
   config: Config,
   current_route: Route,
   on_toggle_theme: Attribute(msg),
   on_open_search: Attribute(msg),
+  on_toggle_menu: Attribute(msg),
+  mobile_menu_open: Bool,
 ) -> Element(msg) {
   html.nav([], [
     html.div([attribute.class("left-nav")], [
       view_site_title(config),
       html.div([attribute.class("socials")], view_socials(config.socials)),
     ]),
+    html.button(
+      [
+        attribute.class("mobile-menu-btn"),
+        attribute.type_("button"),
+        attribute.attribute("aria-label", "Toggle menu"),
+        attribute.attribute("aria-expanded", bool_to_attr(mobile_menu_open)),
+        on_toggle_menu,
+      ],
+      [html.text("\u{2630}")],
+    ),
     html.div(
-      [attribute.class("right-nav")],
+      [
+        attribute.classes([
+          #("right-nav", True),
+          #("mobile-open", mobile_menu_open),
+        ]),
+      ],
       // Menu items (internal links) followed by the search button (wired via
       // on_open_search, omitted when `config.search_enabled` is `False`) and
       // the theme toggle (wired via on_toggle_theme).
@@ -50,6 +71,13 @@ pub fn view(
       ]),
     ),
   ])
+}
+
+fn bool_to_attr(b: Bool) -> String {
+  case b {
+    True -> "true"
+    False -> "false"
+  }
 }
 
 /// Whether the menu item with `url` is the active nav entry for

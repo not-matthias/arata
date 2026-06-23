@@ -73,11 +73,17 @@ nav {
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 0;
+  position: relative;
 }
 
 @media (max-width: 600px) {
+  /* Keep the nav as a row on small screens so the hamburger button stays
+     pinned to the right of the site title. The dropdown is handled by
+     `.right-nav.mobile-open` below. */
   nav {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 }
 
@@ -86,8 +92,8 @@ nav .left-nav {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
-  font-size: 1.5rem;
+  gap: 16px;
+  font-size: 1.75rem;
 }
 
 nav .left-nav .socials {
@@ -97,12 +103,18 @@ nav .left-nav .socials {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-end;
-  gap: 8px;
+  gap: 10px;
+}
+
+nav .left-nav .socials .social {
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
 }
 
 nav .left-nav .socials .social img {
-  width: 16px;
-  height: 16px;
+  width: 28px;
+  height: 28px;
 }
 
 /* Don't display background on hover */
@@ -116,16 +128,22 @@ nav .right-nav {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  font-size: 1.1rem;
+  gap: 0.25rem;
+}
+
+nav .right-nav a {
+  padding: 0.25rem 0.4rem;
 }
 
 nav .right-nav #dark-mode-toggle {
   margin-left: 0.5rem;
-  padding: 0.1rem;
+  padding: 0.25rem;
 }
 
 nav .right-nav #dark-mode-toggle > img {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }
 
 /* Don't display background on hover */
@@ -157,4 +175,112 @@ nav .right-nav a.active {
 
 .logo:hover {
   background-color: transparent;
+}
+
+/* =========================================================================
+   Mobile hamburger menu (visible below 992px).
+   -------------------------------------------------------------------------
+   On desktop (>= 992px) the right-nav menu items (nav links, search button,
+   theme toggle) render inline in the navbar and the hamburger button is
+   `display: none`. Below 992px the inline right-nav collapses and a
+   hamburger button appears in its place; clicking it adds the `mobile-open`
+   class to the right-nav (toggled from arata.gleam via UserToggledMobileMenu),
+   which re-displays the right-nav as an absolute-positioned dropdown below
+   the navbar containing all the same items vertically. */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.6rem;
+  color: var(--text-0);
+  align-self: center;
+  margin-left: auto;
+}
+
+.mobile-menu-btn:hover {
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+@media (max-width: 991px) {
+  /* Show the hamburger button on mobile. */
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Hide the inline right-nav by default. */
+  nav .right-nav {
+    display: none;
+  }
+
+  /* When toggled open, re-display right-nav as a vertical dropdown. */
+  nav .right-nav.mobile-open {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.25rem;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 200px;
+    background: var(--bg-0);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.75rem;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+  }
+
+  /* Make each dropdown item a full-width tap target. */
+  nav .right-nav.mobile-open > a,
+  nav .right-nav.mobile-open > button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0.5rem;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  /* Reset the inline `margin-right` set on menu <a> tags by view_menu. */
+  nav .right-nav.mobile-open > a {
+    border-bottom: none;
+  }
+
+  nav .right-nav.mobile-open > a:hover,
+  nav .right-nav.mobile-open > button:hover {
+    background-color: var(--bg-2);
+    color: var(--text-0);
+  }
+
+  /* Theme toggle: drop the desktop-only left margin so it lines up with the
+     other items in the dropdown. */
+  nav .right-nav.mobile-open #dark-mode-toggle {
+    margin-left: 0;
+  }
+
+  /* The `.toc` rule in toc.css hides the TOC below 1365px. On mobile we
+     instead surface the tags + ToC in the right-content sidebar, which
+     stacks below the main content. Re-display the TOC there. */
+  .toc {
+    display: block;
+  }
+
+  /* Make sure the right-content sidebar shows below the content rather than
+     being hidden. */
+  .arata-shell .right-content {
+    display: block;
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding: 0 0 1.5rem 0;
+  }
 }

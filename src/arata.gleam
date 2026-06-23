@@ -92,6 +92,10 @@ pub type Model {
     system_prefers_dark: Bool,
     /// The search modal state.
     search: SearchState,
+    /// Whether the mobile hamburger menu is open (only relevant below 992px;
+    /// the hamburger button itself is hidden on desktop via CSS, so this flag
+    /// has no visible effect above the breakpoint).
+    mobile_menu_open: Bool,
   )
 }
 
@@ -140,6 +144,7 @@ fn init(_flags: Nil) -> #(Model, effect.Effect(Msg)) {
         results: [],
         selected_index: 0,
       ),
+      mobile_menu_open: False,
     )
 
   // Initialise modem so internal `<a>` clicks are intercepted and dispatched
@@ -204,6 +209,9 @@ pub type Msg {
   SearchKeyPressed(event: search_effect.SearchKeyEvent)
   /// The user clicked a search result (or pressed Enter on it).
   SearchResultClicked(slug: String)
+  /// The user clicked the mobile hamburger menu button (toggles the
+  /// dropdown nav menu below 992px).
+  UserToggledMobileMenu
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
@@ -211,8 +219,15 @@ fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
     UserNavigatedTo(route) -> {
       // Reset the active heading on navigation, then re-arm the TOC observer
       // when landing on a single post (the previous observer watched the old
-      // post's DOM, which is gone after the view re-renders).
-      let model = Model(..model, route:, active_heading: option.None)
+      // post's DOM, which is gone after the view re-renders). Also close the
+      // mobile menu so a click on a nav link dismisses the dropdown.
+      let model =
+        Model(
+          ..model,
+          route:,
+          active_heading: option.None,
+          mobile_menu_open: False,
+        )
       #(
         model,
         post_effects_for(
@@ -335,6 +350,7 @@ fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
           route: target_route,
           search: closed_search(),
           active_heading: option.None,
+          mobile_menu_open: False,
         ),
         effect.batch([
           modem.push(route.href_url(target_route), option.None, option.None),
@@ -345,6 +361,10 @@ fn update(model: Model, msg: Msg) -> #(Model, effect.Effect(Msg)) {
         ]),
       )
     }
+    UserToggledMobileMenu -> #(
+      Model(..model, mobile_menu_open: !model.mobile_menu_open),
+      effect.none(),
+    )
   }
 }
 
@@ -574,6 +594,8 @@ fn view(model: Model) -> Element(Msg) {
               model.route,
               event.on_click(UserToggledTheme),
               event.on_click(UserOpenedSearch),
+              event.on_click(UserToggledMobileMenu),
+              model.mobile_menu_open,
             ),
             main_content,
           ]),
