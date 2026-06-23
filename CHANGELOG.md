@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Config: `sidebar_enabled` (enable/disable right sidebar ToC+Tags).
+- Config: `floating_buttons_enabled` (enable/disable floating ToC FAB).
+- Scroll-to-top button inside floating overlay (top-right, smooth scroll).
+- Post cards: each post in the list is wrapped in a bordered card with hover effect.
 - **Floating ToC button (all screen sizes)**: the floating ToC FAB is now visible on desktop as well as mobile, so readers on any screen size can toggle the table of contents overlay.
 - **Floating overlay Tags section**: the floating ToC overlay now shows a Tags list below the ToC for quick tag navigation.
 - **Scroll-to-top button**: a floating button on all pages smoothly scrolls the window back to the top.
@@ -32,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Post titles: font-weight 700 (bold) in post list.
+- Floating overlay: Tags moved above ToC; duplicate "Table of Contents" heading removed.
+- Standalone scroll-top FAB removed (replaced by in-overlay button).
 - **Post title font-weight**: post titles now use font-weight 700 (was inherited 400) for clearer contrast with the 400-weight body text.
 - **Project card tag chips**: `#tag` chips on project cards now use a 0.5rem gap, padding, and a rounded background for visual grouping.
 - **Default fonts**: switched to system font stacks (`system-ui`, `-apple-system`, etc.) instead of bundled web fonts.
@@ -56,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Deep link blank page: `index.html`/`404.html` now use absolute paths (`/app.mjs`, `/css/...`) instead of relative (`./app.mjs`). On `/posts/markdown`, `./app.mjs` resolved to `/posts/app.mjs` (404).
+- Tags hidden on small screens: `.right-content .post-tags` now hides below 1365px, consistent with `.toc`.
+- Auto-icon default style: `display:block; filter:invert(1)` (was `display:block` with no filter).
+- All 2025 dates replaced with 2026.
 - **Non-root page refresh (404 serves SPA shell)**: `404.html` now serves the SPA shell directly (same as `index.html`) — no redirect. modem reads the URL from the address bar and routes correctly, so deep-link refreshes load the right post and the URL is preserved. (Supersedes the earlier sessionStorage+redirect approach.)
 - **ToC h4 headings**: `view_child` was not rendering children recursively, so any `h4` in a post silently dropped out of the ToC; the renderer now recurses so h2–h4 all appear. A test `h4` heading was added to a post to verify.
 - **Theme toggle oval background**: added `appearance: none` to the theme toggle button to remove the user-agent default button styling, eliminating the residual oval background.
