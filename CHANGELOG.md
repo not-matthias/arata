@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Floating ToC button (all screen sizes)**: the floating ToC FAB is now visible on desktop as well as mobile, so readers on any screen size can toggle the table of contents overlay.
+- **Floating overlay Tags section**: the floating ToC overlay now shows a Tags list below the ToC for quick tag navigation.
+- **Scroll-to-top button**: a floating button on all pages smoothly scrolls the window back to the top.
+- **forgejo.svg social icon**: added a Forgejo icon to the bundled social icon set.
+- **Multi-platform project hosting**: the `Project` type now has `gitlab`, `codeberg`, and `forgejo` fields (alongside `github`) so projects hosted on GitLab, Codeberg, or Forgejo link correctly from the card footer.
+- **Route tests for static files and deep links**: added tests asserting `/atom.xml`, `/rss.xml`, and `/sitemap.xml` parse to `NotFound` (so modem lets the browser fetch them) and that deep post links parse to `Post(slug)`.
 - **Search backdrop**: click outside the search modal to close it, via a CSS overlay backdrop rendered behind the modal.
 - **Mobile menu**: hamburger button visible below 992px that toggles a vertical dropdown of nav links.
 - **Tags menu item**: a "tags" entry added to the navbar for direct access to `/tags`.
@@ -26,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Post title font-weight**: post titles now use font-weight 700 (was inherited 400) for clearer contrast with the 400-weight body text.
+- **Project card tag chips**: `#tag` chips on project cards now use a 0.5rem gap, padding, and a rounded background for visual grouping.
 - **Default fonts**: switched to system font stacks (`system-ui`, `-apple-system`, etc.) instead of bundled web fonts.
 - **Navbar scaling**: larger navbar fonts and bigger icons — 28px social icons, 24px search/theme buttons.
 - **CSS on-demand loading**: `dist/` now ships 10 separate CSS files under `dist/css/` rather than a single `arata.css`, so each page loads only the styles it needs.
@@ -48,12 +56,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **Post page refresh infinite redirect**: `404.html` now stores the requested path in `sessionStorage` and redirects to `/`; the SPA restores the path on init and navigates to the intended route, so deep-link refreshes load the right post.
-- **ToC h4 headings**: `view_child` was not rendering children recursively, so any `h4` in a post silently dropped out of the ToC; the renderer now recurses so h2–h4 all appear.
-- **RSS icon 404 on sub-pages**: social links now use the absolute `/atom.xml` URL with `target=_blank`, so the feed icon resolves on every route.
-- **CJK word count**: multi-byte characters (e.g. CJK ideographs) are now counted as individual words instead of being merged into a single run.
-- **Theme toggle icon flash**: moon/auto icons are now hidden by default (`display: none`), eliminating the triple-icon flash on first paint.
+- **Non-root page refresh (404 serves SPA shell)**: `404.html` now serves the SPA shell directly (same as `index.html`) — no redirect. modem reads the URL from the address bar and routes correctly, so deep-link refreshes load the right post and the URL is preserved. (Supersedes the earlier sessionStorage+redirect approach.)
+- **ToC h4 headings**: `view_child` was not rendering children recursively, so any `h4` in a post silently dropped out of the ToC; the renderer now recurses so h2–h4 all appear. A test `h4` heading was added to a post to verify.
+- **Theme toggle oval background**: added `appearance: none` to the theme toggle button to remove the user-agent default button styling, eliminating the residual oval background.
+- **RSS icon 404 on sub-pages**: social links now use the absolute `/atom.xml` URL with `target=_blank` and `rel="noopener"` (was `rel="me"`); verified `/atom.xml` exists in `dist/`, so the feed icon resolves on every route.
+- **Default theme icon visibility**: the `auto` icon is now visible by default; the `sun` and `moon` icons are hidden with `display: none`, so only the active state shows and the triple-icon flash on first paint is gone.
 - **RSS/static file routing**: `/atom.xml`, `/rss.xml`, and `/sitemap.xml` are now matched before the `[slug]` catch-all, so feeds and the sitemap are served correctly.
+- **CJK word count**: multi-byte characters (e.g. CJK ideographs) are now counted as individual words instead of being merged into a single run.
 - **CJK heading IDs**: when a heading's slug is non-ASCII, a sequential fallback ID (`heading-1`, `heading-2`, …) is used so anchor links stay functional.
 - **Links page layout**: `.link-item a` is now a flexbox row with proper avatar sizing and alignment.
 - **ToC rendering**: `extract_toc_from_html` parsing bug fixed — heading IDs and titles are now extracted properly, so the ToC renders instead of being empty.

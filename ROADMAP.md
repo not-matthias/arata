@@ -899,22 +899,68 @@ click to copy/share a deep link to a section.
 The pagination bar now includes a page-jump input — type a page number and
 press Enter to navigate directly to that page.
 
-### Redirect loop fix (sessionStorage deep-link restore)
+### 404.html serves SPA shell directly (no redirect loop)
 
 Static hosts that serve `index.html` for every path used to cause a refresh
-loop on deep links: refreshing `/posts/foo` served `404.html`, which redirected
-to `/#/posts/foo`, which the SPA re-parsed as a navigation, ad infinitum. Now
-`404.html` stores the requested path in `sessionStorage` and redirects to `/`
-cleanly; the SPA reads the stashed path on init and dispatches a single
-`UserNavigatedTo`, so deep-link refreshes load the right post once.
+loop on deep links: refreshing `/posts/foo` served `404.html`, which
+redirected to `/#/posts/foo`, which the SPA re-parsed as a navigation, ad
+infinitum. The first fix stored the requested path in `sessionStorage` and
+redirected to `/` cleanly. The current approach is simpler and avoids the
+redirect entirely: `404.html` now serves the SPA shell directly (same payload
+as `index.html`). modem reads the URL from the address bar on init and routes
+to the right post in a single navigation, so deep-link refreshes load the
+correct page and the URL is preserved verbatim — no `sessionStorage`, no
+redirect, no loop.
 
-### Mobile floating ToC button
+### Floating ToC + scroll-to-top buttons (all screen sizes)
 
-Below 992px the sidebar ToC is hidden (the layout collapses to one column). A
-floating action button (`☰`) now appears in the bottom-right corner on post
-pages with TOC entries; tapping it opens a bottom-sheet overlay that
-re-renders the same `.toc` tree, so mobile readers can still jump between
-sections. The overlay closes on a backdrop tap.
+The floating table-of-contents button is now visible on **all screen sizes**
+(desktop as well as mobile), not just below 992px. Tapping it opens an overlay
+that re-renders the `.toc` tree plus a **Tags** list beneath, so readers can
+jump between sections or pivot to a tag from anywhere on a post. A second
+floating button — **scroll-to-top** — appears on every page and smoothly
+scrolls the window back to the top. Both FABs sit in the bottom-right corner
+and do not overlap.
+
+### Multi-platform project hosting
+
+The `Project` type now has explicit `gitlab`, `codeberg`, and `forgejo` fields
+(alongside the existing `github` field), so projects hosted on GitLab,
+Codeberg, or a self-hosted Forgejo instance link correctly from the card
+footer's icon-button row. Each field is optional; the card renders an
+icon-button only for the providers that are set.
+
+### forgejo.svg social icon
+
+A `forgejo.svg` icon was added to the bundled social icon set
+(`static/icons/social/`), alongside the existing `github.svg`, `gitlab.svg`,
+and `codeberg.svg`, so Forgejo links render with a recognisable glyph in both
+the navbar social row and project card footers.
+
+### Default theme icon: auto
+
+The theme toggle now defaults to showing the `auto` icon; the `sun` and
+`moon` icons are hidden with `display: none` until their theme is active.
+This eliminates the triple-icon flash on first paint and makes the default
+(`auto`) state visually obvious. The toggle button also sets `appearance:
+none` to shed the user-agent's default button styling, so the icon reads as a
+plain glyph with an opacity hover.
+
+### Route tests for static files and deep links
+
+Added unit tests in `test/route_test.gleam` that assert `/atom.xml`,
+`/rss.xml`, and `/sitemap.xml` parse to `NotFound` (so modem lets the browser
+fetch them directly rather than intercepting as 404 pages), and that deep
+post links (e.g. `/posts/markdown`) parse to `Post(slug)` rather than
+`NotFound`. These guard against regressions in the static-file vs.
+catch-all ordering.
+
+### Project card tag styling
+
+The `#tag` chips on project cards now use a 0.5rem gap, horizontal padding,
+and a rounded background, so the chips read as a grouped pill row rather than
+plain text. Post titles on cards also moved to font-weight 700 (was inherited
+400) for clearer contrast against the 400-weight body copy.
 
 ### CJK word count
 
@@ -925,8 +971,9 @@ word, so the displayed count is meaningful for non-Latin content.
 ### RSS path fix
 
 Social-link RSS icons used to 404 on sub-pages because they pointed at a
-relative URL. They now use the absolute `/atom.xml` path with `target=_blank`,
-so the feed resolves on every route.
+relative URL. They now use the absolute `/atom.xml` path with `target=_blank`
+and `rel="noopener"` (was `rel="me"`); `/atom.xml` is verified to exist in
+`dist/`, so the feed resolves on every route.
 
 ### Body text color and font-weight adjustments
 
