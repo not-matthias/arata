@@ -25,10 +25,11 @@ The research underpinning this roadmap lives in
 5. [Design system specification](#5-design-system-specification)
 6. [Content model & configuration](#6-content-model--configuration)
 7. [Phased implementation plan](#7-phased-implementation-plan)
-8. [Risks & key decisions](#8-risks--key-decisions)
-9. [Version pins & dependencies](#9-version-pins--dependencies)
-10. [Definition of done](#10-definition-of-done)
-11. [References](#11-references)
+8. [Post-v0.1.0 Improvements](#8-post-v010-improvements)
+9. [Risks & key decisions](#9-risks--key-decisions)
+10. [Version pins & dependencies](#10-version-pins--dependencies)
+11. [Definition of done](#11-definition-of-done)
+12. [References](#12-references)
 
 ---
 
@@ -419,7 +420,7 @@ increment. Conventional Commits are used per phase (e.g.
 - **Acceptance:** `gleam build` passes; `gleam run -m lustre/dev start` serves a
   placeholder page.
 
-### Phase 1 — Visual design system & static assets
+### Phase 1 — Visual design system & static assets ✅ DONE
 **Goal:** port apollo's SCSS to plain CSS and copy static assets so the
 placeholder page already looks like apollo.
 
@@ -449,7 +450,7 @@ placeholder page already looks like apollo.
 **Acceptance:** the placeholder renders with apollo's fonts, colours, and
 `.page-header` typography in both light and dark (toggle via devtools).
 
-### Phase 2 — Routing & app shell
+### Phase 2 — Routing & app shell ✅ DONE
 **Goal:** wire modem + the `Route` type so navigation works end-to-end (pages
 can be empty placeholders).
 
@@ -474,7 +475,7 @@ can be empty placeholders).
 without a full page reload; deep links load the right route; unknown paths hit
 `NotFound`.
 
-### Phase 3 — Layout, header, footer, nav
+### Phase 3 — Layout, header, footer, nav ✅ DONE
 **Goal:** the chrome around every page — header (logo/title, menu, socials,
 search button, theme toggle), footer (socials, copyright), 3-column layout.
 
@@ -496,7 +497,7 @@ search button, theme toggle), footer (socials, copyright), 3-column layout.
 **Acceptance:** every route renders inside the apollo chrome; menu/socials
 render from config; active nav link is highlighted (`attribute.classes`).
 
-### Phase 4 — Content pipeline (build step, part 1)
+### Phase 4 — Content pipeline (build step, part 1) ✅ DONE
 **Goal:** read `content/`, parse frontmatter, render markdown to HTML, emit
 `content_index.json` for the SPA to consume.
 
@@ -520,7 +521,7 @@ directory with sample apollo posts.
 **Acceptance:** running the build on the sample `content/` produces a valid
 `content_index.json`; the SPA can `rsvp.get` it and log the post count.
 
-### Phase 5 — Post list & pagination
+### Phase 5 — Post list & pagination ✅ DONE
 **Goal:** the `/posts` page renders a chronological, paginated post list.
 
 **Apollo reference:** `templates/section.html`, `macros/macros.html::list_post`.
@@ -538,7 +539,7 @@ directory with sample apollo posts.
 **Acceptance:** `/posts` shows N posts per page with prev/next; drafts show the
 `DRAFT` label; external-link posts show `↗`.
 
-### Phase 6 — Single post, TOC, meta
+### Phase 6 — Single post, TOC, meta ✅ DONE
 **Goal:** the `/posts/<slug>` page renders a full article with TOC and meta row.
 
 **Apollo reference:** `templates/page.html`, `partials/toc.html`, `static/js/toc.js`.
@@ -560,7 +561,7 @@ directory with sample apollo posts.
 **Acceptance:** a post renders with TOC; scrolling highlights the active
 heading; meta row shows the right fields per frontmatter.
 
-### Phase 7 — Projects (cards) & Talks grids
+### Phase 7 — Projects (cards) & Talks grids ✅ DONE
 **Goal:** `/projects` and `/talks` render their card grids.
 
 **Apollo reference:** `templates/cards.html`, `templates/talks.html`.
@@ -579,7 +580,7 @@ heading; meta row shows the right fields per frontmatter.
 **Acceptance:** projects fill columns in balanced order; talks flip layout at
 1024px; icon-buttons link correctly.
 
-### Phase 8 — Taxonomy (tags)
+### Phase 8 — Taxonomy (tags) ✅ DONE
 **Goal:** `/tags` and `/tags/<tag>` pages.
 
 **Apollo reference:** `templates/taxonomy_{list,single}.html`.
@@ -595,7 +596,7 @@ heading; meta row shows the right fields per frontmatter.
 
 **Acceptance:** `/tags` lists all tags; `/tags/<tag>` lists that tag's posts.
 
-### Phase 9 — Homepage, standalone pages, 404
+### Phase 9 — Homepage, standalone pages, 404 ✅ DONE
 **Goal:** `/`, `/<page>`, and the 404.
 
 **Apollo reference:** `templates/homepage.html`, `page.html`, `404.html`.
@@ -611,7 +612,7 @@ heading; meta row shows the right fields per frontmatter.
 **Acceptance:** `/` shows the homepage; `/about` shows the about page; a bogus
 URL shows the 404.
 
-### Phase 10 — Theme system (5 modes, FOUC, persistence)
+### Phase 10 — Theme system (5 modes, FOUC, persistence) ✅ DONE
 **Goal:** faithful theme switching with all 5 modes.
 
 **Apollo reference:** `partials/header.html` (lines 179–261),
@@ -635,7 +636,7 @@ URL shows the 404.
 **Acceptance:** all 5 `config.theme` modes behave like apollo; theme survives
 reload; system-pref change updates `auto` mode live.
 
-### Phase 11 — Syntax highlighting & fancy code blocks
+### Phase 11 — Syntax highlighting & fancy code blocks ✅ DONE
 **Goal:** highlighted code with copy button + language label.
 
 **Apollo reference:** `[markdown.highlighting]`, `static/js/codeblock.js`,
@@ -657,7 +658,7 @@ reload; system-pref change updates `auto` mode live.
 **Acceptance:** code blocks show a colored language label and a working copy
 button; copied text has no line numbers.
 
-### Phase 12 — Search (elasticlunr, Cmd/Ctrl+K modal)
+### Phase 12 — Search (elasticlunr, Cmd/Ctrl+K modal) ✅ DONE
 **Goal:** the search modal with keyboard navigation.
 
 **Apollo reference:** `partials/nav.html`, `static/js/searchElasticlunr.js`
@@ -680,7 +681,7 @@ lines 2569–3202, in Lustre).
 **Acceptance:** Cmd/Ctrl+K opens the modal; typing queries the index; keyboard
 navigation works; results link to posts.
 
-### Phase 13 — Shortcodes (note, character, image, mermaid)
+### Phase 13 — Shortcodes (note, character, image, mermaid) ✅ DONE
 **Goal:** all four shortcodes render correctly inside markdown bodies.
 
 **Apollo reference:** `templates/shortcodes/{note,character,mermaid,image}.html`.
@@ -698,7 +699,7 @@ navigation works; results link to posts.
 
 **Acceptance:** posts using each shortcode render identically to apollo.
 
-### Phase 14 — MathJax & Mermaid rendering
+### Phase 14 — MathJax & Mermaid rendering ✅ DONE
 **Goal:** math typesets and mermaid diagrams render after navigation.
 
 **Apollo reference:** `partials/header.html` (MathJax config),
@@ -718,7 +719,7 @@ navigation works; results link to posts.
 **Acceptance:** `$$…$$` math renders; mermaid blocks render; both survive route
 changes; mermaid re-themes on toggle.
 
-### Phase 15 — Comments, analytics, SEO, feeds, sitemap, injection points
+### Phase 15 — Comments, analytics, SEO, feeds, sitemap, injection points ✅ DONE
 **Goal:** the long tail of site-wide features.
 
 **Apollo reference:** `partials/header.html`, `base.html` injection points,
@@ -742,7 +743,7 @@ changes; mermaid re-themes on toggle.
 **Acceptance:** per-page comments load; analytics fire; view-source shows
 correct meta; feeds and sitemap validate.
 
-### Phase 16 — The wavy section boundary (NEW)
+### Phase 16 — The wavy section boundary (NEW) ✅ DONE
 **Goal:** a soft, wavy boundary between two sections of the site — a feature
 apollo does **not** have, designed fresh for arata.
 
@@ -766,7 +767,7 @@ apollo does **not** have, designed fresh for arata.
 **Acceptance:** a visible soft wavy divider renders between the chosen sections
 in both themes and at all breakpoints.
 
-### Phase 17 — Static-site generation / build pipeline
+### Phase 17 — Static-site generation / build pipeline ✅ DONE
 **Goal:** replace Zola end-to-end: `content/` → `dist/` with a hydratable SPA,
 search index, feeds, sitemap, minified assets.
 
@@ -790,7 +791,7 @@ template.
 **Acceptance:** `gleam run -m arata/build` produces a `dist/` that, served
 statically, behaves identically to `zola build` on the same content.
 
-### Phase 18 — Polish, accessibility, responsive, tests
+### Phase 18 — Polish, accessibility, responsive, tests ✅ DONE
 **Goal:** production quality.
 
 **Steps:**
@@ -807,7 +808,7 @@ statically, behaves identically to `zola build` on the same content.
 **Acceptance:** no axe/lighthouse critical issues; all breakpoints match apollo;
 test suite green.
 
-### Phase 19 — Release & docs
+### Phase 19 — Release & docs ✅ DONE
 **Steps:**
 1. Write a `docs/` guide (config reference, content authoring, shortcode
    reference, deployment).
@@ -816,7 +817,87 @@ test suite green.
 
 ---
 
-## 8. Risks & key decisions
+## 8. Post-v0.1.0 Improvements
+
+After the v0.1.0 release, arata received a round of polish and architectural
+improvements. These are not part of the original 19-phase plan but reflect the
+project's evolution toward a leaner, more maintainable codebase.
+
+### File-based content model
+
+Replaced the build-time `content_index.json` emission with a runtime file-based
+loader. Markdown files live under `content/{posts,pages,projects,links}/*.md`
+and are parsed at runtime by the [`mork`](https://hexdocs.pm/mork) markdown
+parser. This removes the build step's frontmatter/HTML pipeline and lets authors
+edit content without rebuilding.
+
+### CSS modular split
+
+Source CSS reorganised into 10 modules under `src/css/`:
+`base`, `layout`, `components`, `post`, `toc`, `search`, `cards`, `links`,
+`syntax`, `accessibility`. The build emits each as a separate `<link>` tag
+under `dist/css/`, so each page loads only the styles it needs. Total: ~115 KB
+minified (32 KB gzipped).
+
+### Config system
+
+A unified `config.gleam` reads site configuration from a single source, with
+flags for:
+
+- font families (text, header, code),
+- `rss_enabled`, `search_enabled`, `mathjax_enabled`,
+- analytics providers (GoatCounter, Umami, Google).
+
+### Mobile menu
+
+A hamburger button appears below 992px and toggles a vertical dropdown of nav
+links, replacing the previous always-visible nav which overflowed on small
+screens.
+
+### Search improvements
+
+- Search now includes the post body (HTML stripped to plain text), not just
+  title/description/tags.
+- Results show a context snippet (30 chars before/after the match).
+- The search input auto-focuses when the modal opens.
+
+### ToC multi-level with CJK support
+
+The table of contents now parses `h2`, `h3`, and `h4` headings into a nested
+tree (previously single-level). CJK heading IDs use a punctuation-denylist
+slugify with a sequential fallback (`heading-1`, `heading-2`, …) for non-ASCII
+slugs.
+
+### Links page with avatars
+
+The links page renders each link as a card with an optional circular avatar
+(from the `image` field), a border, and a hover effect. Card content is no
+longer wrapped in an `<a>` (`role=generic`); only the title is a link.
+
+### Bundle optimization
+
+Production bundle measured at 115 KB minified (32 KB gzipped), well-optimised
+for an SPA of this scope. Achieved via the CSS modular split, removal of
+bundled web fonts (system font stacks), and tree-shaking of unused Lustre APIs.
+
+### Theme toggle modernized
+
+The theme toggle is now a circular button with `var(--primary-color)` (#3555b3)
+background and white SVG icons, replacing the previous text-based toggle.
+
+### Post headings clickable with anchor links
+
+Post subheadings (`h2`–`h4`) are now wrapped in `<a href="#id">` so readers can
+click to copy/share a deep link to a section.
+
+### Page jump input in pagination
+
+The pagination bar now includes a page-jump input — type a page number and
+press Enter to navigate directly to that page.
+
+---
+
+## 9. Risks & key decisions
 
 1. **External `<script src=…>` execution in Lustre.** Lustre's vdom diff does
    not re-execute scripts on route change. **Mitigation:** emit MathJax,
@@ -843,7 +924,7 @@ test suite green.
 
 ---
 
-## 9. Version pins & dependencies
+## 10. Version pins & dependencies
 
 | Package | Pin | Purpose |
 |---|---|---|
@@ -864,7 +945,7 @@ selector, flags)` is the only SPA starter; `effect.subscribe`/`unsubscribe`/
 
 ---
 
-## 10. Definition of done
+## 11. Definition of done
 
 arata is "done" when **all** of the following hold:
 
@@ -883,7 +964,7 @@ arata is "done" when **all** of the following hold:
 
 ---
 
-## 11. References
+## 12. References
 
 - apollo source: `https://github.com/not-matthias/apollo` (cloned to
   `/home/z/my-project/apollo`).
