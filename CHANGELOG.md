@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Search backdrop**: click outside the search modal to close it, via a CSS overlay backdrop rendered behind the modal.
+- **Mobile menu**: hamburger button visible below 992px that toggles a vertical dropdown of nav links.
+- **Tags menu item**: a "tags" entry added to the navbar for direct access to `/tags`.
+- **Tags heading in sidebar**: a "Tags" label rendered above each post's tag list.
+- **Link avatars**: optional `image` field on the `Link` type, rendered as a circular avatar on the links page.
+- **Multi-level table of contents**: the ToC now parses `h2`, `h3`, and `h4` headings from the rendered HTML into a nested tree (previously single-level).
+- **Bundle size analysis**: production bundle measured at 115 KB minified (32 KB gzipped), well-optimised for an SPA of this scope.
+
+### Changed
+
+- **Default fonts**: switched to system font stacks (`system-ui`, `-apple-system`, etc.) instead of bundled web fonts.
+- **Navbar scaling**: larger navbar fonts and bigger icons — 28px social icons, 24px search/theme buttons.
+- **CSS on-demand loading**: `dist/` now ships 10 separate CSS files under `dist/css/` rather than a single `arata.css`, so each page loads only the styles it needs.
+- **CSS modular split**: source CSS reorganised into 10 modules under `src/css/` mirroring the runtime split.
+- **CJK slugify**: replaced the ASCII allowlist with a punctuation denylist, so non-ASCII characters pass through into slugs.
+
+### Fixed
+
+- **RSS/static file routing**: `/atom.xml`, `/rss.xml`, and `/sitemap.xml` are now matched before the `[slug]` catch-all, so feeds and the sitemap are served correctly.
+- **CJK heading IDs**: when a heading's slug is non-ASCII, a sequential fallback ID (`heading-1`, `heading-2`, …) is used so anchor links stay functional.
+- **Links page layout**: `.link-item a` is now a flexbox row with proper avatar sizing and alignment.
+
 ## [0.1.0] — 2025-06-22
 
 The initial release of arata — a faithful reimplementation of the apollo blog theme using Gleam and Lustre.
