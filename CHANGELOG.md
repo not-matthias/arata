@@ -5,6 +5,83 @@ All notable changes to arata are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.1.0] — 2026-06-23
+
+### Added
+
+- Added `robots.txt` generation to the static build pipeline.
+  - `dist/robots.txt` is now emitted during `gleam run -m build/pipeline`.
+  - The generated file includes a `Sitemap:` directive based on `SiteMeta.base_url`.
+  - The SPA router excludes `/robots.txt` so static hosts can serve the file directly.
+
+- Added `llms.txt` generation to the static build pipeline.
+  - `dist/llms.txt` is now emitted as a Markdown file for LLM/agent consumers.
+  - The file includes a required H1 heading, site description, and canonical Markdown links to core resources, posts, pages, projects, external links, and the sitemap.
+  - Draft posts are excluded from `llms.txt`.
+  - Base URLs are normalized to avoid duplicate slashes.
+  - The SPA router excludes `/llms.txt` so static hosts can serve the file directly.
+
+- Added validation-oriented static-file routing coverage for crawler-facing assets.
+  - `/robots.txt`
+  - `/llms.txt`
+  - `/atom.xml`
+  - `/rss.xml`
+  - `/sitemap.xml`
+  - `/content_index.json`
+  - `/search_index.json`
+
+### Changed
+
+- Updated local preview documentation to use `http-server` instead of Python's built-in static server.
+
+  ```sh
+  nix run nixpkgs#http-server -- -p 8080 dist
+````
+
+- Documented that local preview should use a static server suitable for SPA routes.
+  - Python's `python -m http.server --directory dist` does not provide SPA deep-link fallback for routes like `/posts/configuration`.
+  - `http-server` works correctly for the tested SPA navigation and refresh flow.
+
+- Updated README documentation for the current static-site build and preview workflow.
+
+- Updated demo-site content and homepage styling to better reflect the current arata feature set.
+
+- Adjusted blockquote styling to use the arata accent color `#3555b3`.
+
+- Updated post dates to use the correct 2026 dates.
+
+### Fixed
+
+- Fixed false 404 flashes during SPA startup.
+  - Previously, deep-link refreshes could briefly render the 404 page because `posts`, `pages`, `projects`, and other content lists started empty while `content_index.json` was still loading.
+  - The app now tracks content loading state explicitly.
+  - Route-specific lookup only runs after `content_index.json` has loaded successfully.
+  - Loading state now renders a loading view instead of a false 404.
+  - Fetch/decode failure now renders a content-load error instead of pretending the site has no content.
+
+- Fixed post-page side effects running too early.
+  - TOC observer, code-block enhancement, note enhancement, MathJax, and Mermaid rendering are now armed after content has loaded and the post DOM can exist.
+  - This avoids racing effects against an empty initial render on deep-link refresh.
+
+- Fixed local deep-link preview workflow.
+  - The documented preview command now avoids Python server behavior where `/posts`, `/posts/configuration`, `/about`, and other SPA routes are returned as server-level 404s.
+
+- Fixed Gleam and Lustre image/icon rendering issues in project/demo content.
+
+- Fixed MathJax rendering test coverage.
+
+### Removed
+
+- Removed unused image assets from the repository/demo content.
+
+### CI
+
+- Added mirror-to-other-git-server workflow support.
+
+### Build
+
+- Updated the generated arata demo site output.
+
 ## [v1.0.0] — 2026-06-23
 
 ### Added
