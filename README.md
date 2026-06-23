@@ -1,10 +1,17 @@
-# arata
+<div align="center">
+<br />
 
-A faithful reimplementation of the [apollo](https://github.com/not-matthias/apollo) blog theme, built with [Gleam](https://gleam.run) and the [Lustre](https://hexdocs.pm/lustre) framework.
+# Arata
 
-arata reproduces apollo's minimal, typography-driven aesthetic as a client-side single-page application: content is authored in Markdown, parsed at build time by [mork](https://hex.pm/packages/mork) (a pure-Gleam CommonMark + GFM parser), and served to a Lustre SPA that fetches a single `content_index.json` at runtime. No file system access happens in the browser.
+**A faithful reimplementation of the [apollo](https://github.com/not-matthias/apollo) blog theme, built with [Gleam](https://gleam.run) and the [Lustre](https://hexdocs.pm/lustre) framework.**
 
-> **Status:** Stable version is out
+[![License](https://img.shields.io/badge/LICENSE-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Stable-green.svg)]()
+[![Gleam](https://img.shields.io/badge/Gleam-ffaff3?logo=gleam&labelColor=292d3e&color=ffaff3)](https://gleam.run)
+
+</div>
+
+Arata reproduces apollo's minimal, typography-driven aesthetic as a client-side single-page application: content is authored in Markdown, parsed at build time by [mork](https://hex.pm/packages/mork) (a pure-Gleam CommonMark + GFM parser), and served to a Lustre SPA that fetches a single `content_index.json` at runtime. No file system access happens in the browser.
 
 ## Stack
 
