@@ -38,6 +38,8 @@ This produces everything in `dist/`:
 - `atom.xml` / `rss.xml` — Atom 1.0 and RSS 2.0 feeds (written when
   `rss_enabled` is `True`).
 - `sitemap.xml` — sitemap.
+- `robots.txt`  — the robots exclusion protocol
+- `llms.txt`  — content for llms. (See https://llmstxt.org )
 - `fonts/`, `icons/`, `images/` — static assets (copied from `static/`).
 
 ### What the pipeline does
