@@ -38,6 +38,7 @@ import modem
 import route.{
   type Route, Home, Links, NotFound, Page, Post, Posts, Projects, Tag, Tags,
 }
+import view/aratafetch
 import view/cards
 import view/header
 import view/home as home_view
@@ -638,7 +639,28 @@ fn view(model: Model) -> Element(Msg) {
 
 fn view_route_content(model: Model) -> #(Element(Msg), Element(Msg)) {
   case model.route {
-    Home -> #(home_view.view(model.homepage), none())
+    Home -> {
+      let stats =
+        aratafetch.from_content(
+          model.site_meta.title,
+          model.posts,
+          model.links,
+          model.projects,
+          option.None,
+          model.config.aratafetch_maintain_for,
+        )
+
+      let fetch_el = aratafetch.view(model.config.aratafetch_enabled, stats)
+
+      #(
+        home_view.view(
+          model.homepage,
+          model.config.aratafetch_enabled,
+          fetch_el,
+        ),
+        none(),
+      )
+    }
 
     Posts(page) -> #(
       post_list.view(model.posts, page, posts_per_page, UserEnteredPageJump),

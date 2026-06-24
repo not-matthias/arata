@@ -79,6 +79,10 @@ pub type Config {
     /// scroll-to-top button) are rendered. When `False`, no FAB is shown
     /// and the overlay is not reachable. Defaults to `True`.
     floating_buttons_enabled: Bool,
+    /// Whether to show the aratafetch ASCII summary on the homepage.
+    /// When `False`, the homepage behaves exactly as before.
+    aratafetch_enabled: Bool,
+    aratafetch_maintain_for: Option(String),
   )
 }
 
@@ -137,6 +141,8 @@ pub fn default() -> Config {
     mathjax_enabled: True,
     sidebar_enabled: True,
     floating_buttons_enabled: True,
+    aratafetch_enabled: True,
+    aratafetch_maintain_for: Some("since 2026-06-21"),
   )
 }
 

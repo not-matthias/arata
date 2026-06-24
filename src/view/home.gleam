@@ -1,21 +1,19 @@
-//// Homepage view: renders the custom landing page, mirroring apollo's
-//// `templates/homepage.html`.
-////
-//// apollo's homepage template renders `<main><article><section class="body">`
-//// containing the `page_header` (the site title) followed by the homepage
-//// markdown body. arata does the same: a `.page-header` with the title (and
-//// optional subtitle), then the pre-rendered HTML body via
-//// `unsafe_raw_html`.
+//// Homepage view with optional aratafetch block.
 
 import data/page.{type Page}
 import gleam/option
 import lustre/attribute
-import lustre/element.{type Element, unsafe_raw_html}
+import lustre/element.{type Element, none, unsafe_raw_html}
 import lustre/element/html
 
-/// Render the homepage. The page-header (with optional subtitle) is followed
-/// by the pre-rendered HTML body.
-pub fn view(home: Page) -> Element(msg) {
+/// Render the homepage.
+///
+/// aratafetch is rendered AFTER the markdown body when enabled.
+pub fn view(
+  home: Page,
+  aratafetch_enabled: Bool,
+  aratafetch_view: Element(msg),
+) -> Element(msg) {
   html.main([], [
     html.article([], [
       html.section([attribute.class("body")], [
@@ -23,10 +21,29 @@ pub fn view(home: Page) -> Element(msg) {
           html.text(home.title),
           ..view_subtitle(home.subtitle)
         ]),
+
+        // Markdown body
         unsafe_raw_html("", "div", [], home.body),
+
+        //  aratafetch
+        view_aratafetch(aratafetch_enabled, aratafetch_view),
       ]),
     ]),
   ])
+}
+
+/// Conditionally render aratafetch.
+///
+/// Invariant:
+///   - disabled → renders nothing (layout identical to pre-feature)
+fn view_aratafetch(
+  enabled: Bool,
+  aratafetch_view: Element(msg),
+) -> Element(msg) {
+  case enabled {
+    True -> aratafetch_view
+    False -> none()
+  }
 }
 
 fn view_subtitle(subtitle: option.Option(String)) -> List(Element(msg)) {
