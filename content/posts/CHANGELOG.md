@@ -14,6 +14,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [v1.3.1] — 2026-06-24
+
+### Changed
+
+- Increased the base font size for better body text readability.
+- Improved light/dark theme contrast while preserving arata's minimal visual style.
+- Added standard CSS compatibility improvements, including `line-clamp` alongside `-webkit-line-clamp`.
+
+### Fixed
+
+- Fixed the first theme-toggle click from `Auto` so it produces an immediate visible theme change.
+- Fixed project card social icons resolving from the domain root under non-root deployments.
+- Fixed incorrect paths in the `about` and `home` content pages.
+- Improved theme-toggle icon visibility across Light, Dark, and Auto states.
+
+---
 ## [v1.3.0] — 2026-06-24
 
 ### Added
