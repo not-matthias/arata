@@ -6,14 +6,22 @@
    ========================================================================= */
 
 .page-header {
-    font-size: 2.5em;
+    font-size: 2em;
     line-height: 100%;
     font-family: var(--header-font);
     /* Fix 4: pin the page title to 700 so it stands out from the 400-weight
      body copy. Previously both inherited 400 from `html` and looked
      identical in weight (only the larger font-size distinguished them). */
     font-weight: 700;
-    margin: 4rem 0px 1rem 0px;
+    margin: 3rem 0px 1.1rem 0px;
+}
+
+.page-subtitle {
+    font-size: 1.36rem;
+    line-height: 1.5;
+    letter-spacing: 0.005em;
+    color: var(--header-font);
+    opacity: 0.95;
 }
 
 /* 404 header */

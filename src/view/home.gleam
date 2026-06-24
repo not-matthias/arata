@@ -113,7 +113,7 @@ fn view_subtitle(subtitle: option.Option(String)) -> List(Element(msg)) {
   case subtitle {
     option.Some(text) -> [
       html.br([]),
-      html.small([], [html.text(text)]),
+      html.small([attribute.class("page-subtitle")], [html.text(text)]),
     ]
 
     option.None -> []
