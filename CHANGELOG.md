@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.1.3] — 2026-06-24
+
+### Added
+
+- Added optional `aratafetch` homepage summary block.
+  - Renders a neofetch-style ASCII site summary at the bottom of the homepage, after the Markdown body.
+  - Controlled by `Config.aratafetch_enabled`.
+  - Supports an optional `Config.aratafetch_maintained_for` display string for the `maintained` row.
+  - Summarizes loaded runtime content:
+    - site title
+    - published post count
+    - total word count
+    - unique tag count
+    - friend link count
+    - project count
+    - optional maintenance string
+
+### Changed
+
+- Refactored project card layout.
+  - Project tags are now rendered as an independent row between the card title and tagline.
+  - The project card footer now only contains external icon links.
+  - This prevents tag chips from competing with footer icons for horizontal space on narrow screens.
+
+- Updated configuration documentation.
+  - Documented `aratafetch_enabled`.
+  - Documented `aratafetch_maintained_for`.
+  - Clarified how aratafetch statistics are computed.
+  - Clarified that draft posts are excluded from aratafetch post count, word count, and tag count.
+
+- Updated content-authoring documentation.
+  - Removed outdated homepage wording about the wavy boundary divider.
+  - Added aratafetch behavior to the homepage section.
+  - Documented that aratafetch uses the loaded runtime content model.
+
+- Updated deployment documentation.
+
+### Removed
+
+- Removed `comment_count` from aratafetch.
+  - Comment statistics are intentionally omitted for now because external comment providers such as Giscus or Utterances do not provide a reliable static local count in arata's current content model.
+
+### Fixed
+
+- Fixed project card tag overflow on small screens by moving tags out of the footer and allowing them to wrap as their own row.
+
+---
+
 ## [v1.1.2] — 2026-06-24
 
 ### Added
