@@ -15,6 +15,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.4.1] — 2026-06-24
+
+### Added
+
+- Added an optional homepage latest-posts section rendered above aratafetch.
+- Added `latest_posts_enabled` and `latest_posts_count` configuration options.
+- Added a compact editorial-style homepage post list layout.
+
+### Changed
+
+- Refined homepage latest-posts styling toward a cleaner minimalist presentation.
+- Limited homepage post hover interaction to titles only for reduced visual noise.
+- Improved homepage latest-posts accessibility semantics by making only post titles interactive links.
+
+### Documentation
+
+- Documented homepage latest-posts configuration and behavior.
+
+---
+
 ## [v1.4.0] — 2026-06-24
 
 ### Added
