@@ -370,6 +370,61 @@ aratafetch does not currently display comment counts.
 > External comment systems, such as Giscus or Utterances do not provide a reliable static local count in
 > arata's current data model, so comment statistics are intentionally omitted until a stable data source is added.
 
+### `latest_posts_enabled` and `latest_posts_count`
+
+Arata can optionally render a compact latest-posts section on the homepage.
+
+When enabled, the newest published posts are displayed above aratafetch using
+the already-loaded runtime content model. No additional requests are performed.
+
+The section is intended to provide a lightweight editorial-style homepage
+overview without turning the homepage into a full archive page.
+
+Example configuration:
+
+```gleam
+Config(
+  // ...
+  latest_posts_enabled: True,
+  latest_posts_count: 5,
+)
+````
+
+Disable it with:
+
+```gleam
+latest_posts_enabled: False,
+```
+
+Control the number of displayed posts with:
+
+```gleam
+latest_posts_count: 4,
+```
+
+The latest-posts section:
+
+* appears below the homepage Markdown body
+* appears above aratafetch
+* displays published posts only
+* uses the existing runtime post ordering
+* does not perform additional fetches
+* does not render when there are no posts
+
+The homepage list uses a compact editorial layout:
+
+```txt
+2026-06-25 ● Configurable homepage latest-posts section
+2026-06-24 ● Implement Lustre-managed gallery lightbox
+2026-06-24 ● Introducing aratafetch homepage summary
+2026-06-23 ● Guide for multi-platform project hosting
+```
+
+Only post titles are interactive links.
+
+Dates and separators are rendered as non-interactive metadata for cleaner
+accessibility semantics and reduced hover noise.
+
 ### `analytics`
 
 One of:
