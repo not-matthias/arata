@@ -62,43 +62,43 @@
    ------------------------------------------------------------------------- */
 
 @font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 400;
-  src: url("/fonts/SpaceGrotesk/SpaceGrotesk-Regular.ttf") format("truetype");
-  font-display: swap;
+    font-family: "Space Grotesk";
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/SpaceGrotesk/SpaceGrotesk-Regular.ttf") format("truetype");
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 700;
-  src: url("/fonts/SpaceGrotesk/SpaceGrotesk-Bold.ttf") format("truetype");
-  font-display: swap;
+    font-family: "Space Grotesk";
+    font-style: normal;
+    font-weight: 700;
+    src: url("/fonts/SpaceGrotesk/SpaceGrotesk-Bold.ttf") format("truetype");
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "ZedTextFtl";
-  src: url("/fonts/zed-fonts/ZedTextL-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: "ZedTextFtl";
+    src: url("/fonts/zed-fonts/ZedTextL-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "ZedTextFtl";
-  src: url("/fonts/zed-fonts/ZedTextL-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+    font-family: "ZedTextFtl";
+    src: url("/fonts/zed-fonts/ZedTextL-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "ZedDisplayFtl";
-  src: url("/fonts/zed-fonts/ZedDisplayL-Heavy.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: "ZedDisplayFtl";
+    src: url("/fonts/zed-fonts/ZedDisplayL-Heavy.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* =========================================================================
@@ -107,120 +107,132 @@
    ------------------------------------------------------------------------- */
 
 :root {
-  /* Fonts */
-  --font-size-base: 17px;
-  /* Fix 9b: default the monospace families to the system stack so the
+    /* Fonts */
+    --font-size-base: 17px;
+    /* Fix 9b: default the monospace families to the system stack so the
      browser uses the OS's native monospace (e.g. SF Mono on macOS, Cascadia
      Code on Windows) instead of loading the bundled JetBrains Mono TTFs.
      The inline <style> override in arata.gleam swaps in `config.fonts.code`
      when configured. */
-  --mono-text-font: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
-  --text-font: "ZedTextFtl";
-  --header-font: "ZedDisplayFtl", "Space Grotesk", "Helvetica", sans-serif;
-  --code-font: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    --mono-text-font:
+        ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+        monospace;
+    --text-font: "ZedTextFtl";
+    --header-font: "ZedDisplayFtl", "Space Grotesk", "Helvetica", sans-serif;
+    --code-font:
+        ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+        monospace;
 
-  /* Fix 5: semi-transparent body text color. Light theme uses a dark
+    /* Fix 5: semi-transparent body text color. Light theme uses a dark
      near-opaque gray (#151515DE ≈ 87% alpha); dark theme overrides with a
      light near-opaque gray (#F0F0F0DE). Headings/links/etc. still use
      `--text-0` so only body copy is affected. */
-  --body-text: #151515de;
+    --body-text: #151515de;
 
-  /* Layout & type scale */
-  --line-height: 1.5;
-  --page-width: 920px;
+    /* Layout & type scale */
+    --line-height: 1.5;
+    --page-width: 920px;
 
-  /* Light palette (sass/theme/light.scss, with darken() values pre-computed) */
-  --bg-0: #ffffff;
-  --bg-1: #fafafa;       /* darken(#fff, 2%)  */
-  --bg-2: #f0f0f0;       /* darken(#fafafa, 5%) */
-  --text-0: #151515;     /* darken(#fff, 87%) */
-  --text-1: #222222;     /* Fix 7: darker than the previous #666 for stronger contrast */
-  --text-2: #b3b3b3;     /* darken(#fff, 30%) */
+    /* Light palette (higher contrast) */
+    --bg-0: #ffffff;
+    --bg-1: #f7f7f7;
+    --bg-2: #e5e7eb;
 
-  --border-color: var(--bg-2);
+    --text-0: #111827;
+    --text-1: #1f2937;
+    --text-2: #4b5563;
 
-  --primary-color: #3555b3;
-  --hover-color: white;
+    --border-color: #d1d5db;
 
-  --icon-filter: none;
+    --primary-color: #2f4fa3;
+    --hover-color: #f3f4f6;
 
-  /* Code-block label text color (sass/parts/_code.scss :root) */
-  --label-color: #f0f0f0;
+    --icon-filter: none;
 
-  /* Note shortcode (sass/parts/_note.scss :root) */
-  --note-header-bg: var(--bg-2);
-  --note-header-color: var(--text-0);
-  --note-content-bg: var(--bg-1);
+    /* Code-block label text color */
+    --label-color: #f8fafc;
 
-  /* Code-block helper aliases (sass/parts/_code.scss :root) */
-  --bg-primary: var(--bg-1);
-  --text-color: var(--text-0);
+    /* Note shortcode */
+    --note-header-bg: var(--bg-2);
+    --note-header-color: var(--text-0);
+    --note-content-bg: var(--bg-1);
+
+    /* Code-block helper aliases */
+    --bg-primary: var(--bg-1);
+    --text-color: var(--text-0);
 }
 
 :root.dark {
-  /* Dark palette (sass/theme/dark.scss, with lighten() values pre-computed) */
-  --bg-0: #121212;
-  --bg-1: #1c1c1c;       /* lighten(#121212, 5%)  */
-  --bg-2: #262626;       /* lighten(#1c1c1c, 10%) */
-  --text-0: #f0f0f0;     /* lighten(#121212, 87%) */
-  --text-1: #cccccc;     /* Fix 7: lighter than the previous #999 for stronger contrast */
-  --text-2: #737373;     /* lighten(#121212, 40%) */
+    /* Dark palette (higher contrast) */
+    --bg-0: #0f1115;
+    --bg-1: #171a21;
+    --bg-2: #242936;
 
-  /* Fix 5: dark-theme body text — semi-transparent light gray (#F0F0F0DE)
-     as the user requested for body copy. */
-  --body-text: #f0f0f0de;
+    --text-0: #f8fafc;
+    --text-1: #e5e7eb;
+    --text-2: #a1a1aa;
 
-  /* --border-color stays var(--bg-2) (defined on :root) */
-  /* --primary-color stays #3555b3 */
-  /* --hover-color stays white */
+    /* Body copy: readable but still slightly softened on dark backgrounds. */
+    --body-text: #f8fafce0;
 
-  --icon-filter: invert(1);
+    --border-color: #374151;
 
-  /* Note-derived variables re-resolve automatically via var(--bg-*) refs. */
+    /* Keep the arata blue, slightly brightened for dark backgrounds. */
+    --primary-color: #5f7eea;
+    --hover-color: #1f2937;
 
-  /* Dark-mode icon inversion for socials + search (from dark.scss nesting) */
+    --icon-filter: invert(1);
+
+    /* Note shortcode */
+    --note-header-bg: var(--bg-2);
+    --note-header-color: var(--text-0);
+    --note-content-bg: var(--bg-1);
+
+    /* Code-block helper aliases */
+    --bg-primary: var(--bg-1);
+    --text-color: var(--text-0);
 }
 
 :root.dark .social > img,
 :root.dark .search-button > img {
-  filter: invert(1);
+    filter: invert(1);
 }
 /* =========================================================================
    3. html / body / layout  (sass/main.scss)
    ------------------------------------------------------------------------- */
 
 html {
-  background-color: var(--bg-0);
-  /* Fix 5: body text color uses the semi-transparent --body-text variable
+    background-color: var(--bg-0);
+    /* Fix 5: body text color uses the semi-transparent --body-text variable
      (light: #151515DE, dark: #F0F0F0DE) rather than the fully-opaque
      --text-0, per the user's request. */
-  color: var(--body-text);
-  font-family: var(--text-font);
-  line-height: var(--line-height);
-  /* Fix 4 — reverted body font-weight back to 400 (normal). The earlier
+    color: var(--body-text);
+    font-family: var(--text-font);
+    line-height: var(--line-height);
+    /* Fix 4 — reverted body font-weight back to 400 (normal). The earlier
      bump to 500/600 made body text too heavy and visually competed with
      headings; the user asked to return to the previous default weight.
      Headings retain their own font-weight (700 via the @font-face Bold cut
      and CSS) so they still stand out. */
-  font-weight: 400;
+    font-weight: 400;
 }
 
 @media (max-width: 992px) {
-  html {
-    font-size: calc(var(--font-size-base) * 0.97);
-  }
+    html {
+        font-size: calc(var(--font-size-base) * 0.97);
+    }
 }
 
 @media (max-width: 768px) {
-  html {
-    font-size: calc(var(--font-size-base) * 0.95);
-  }
+    html {
+        font-size: calc(var(--font-size-base) * 0.95);
+    }
 }
 
 @media (max-width: 576px) {
-  html {
-    font-size: calc(var(--font-size-base) * 0.92);
-  }
+    html {
+        font-size: calc(var(--font-size-base) * 0.92);
+    }
 }
 
 /* =========================================================================
@@ -233,93 +245,93 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--header-font);
-  font-size: 1.2rem;
-  margin-top: 2em;
+    font-family: var(--header-font);
+    font-size: 1.2rem;
+    margin-top: 2em;
 }
 
 h1::before {
-  color: var(--primary-color);
-  content: "# ";
+    color: var(--primary-color);
+    content: "# ";
 }
 
 h2::before {
-  color: var(--primary-color);
-  content: "## ";
+    color: var(--primary-color);
+    content: "## ";
 }
 
 h3::before {
-  color: var(--primary-color);
-  content: "### ";
+    color: var(--primary-color);
+    content: "### ";
 }
 
 h4::before {
-  color: var(--primary-color);
-  content: "#### ";
+    color: var(--primary-color);
+    content: "#### ";
 }
 
 h5::before {
-  color: var(--primary-color);
-  content: "##### ";
+    color: var(--primary-color);
+    content: "##### ";
 }
 
 h6::before {
-  color: var(--primary-color);
-  content: "###### ";
+    color: var(--primary-color);
+    content: "###### ";
 }
 .primary-color {
-  color: var(--primary-color);
+    color: var(--primary-color);
 }
 ::-moz-selection {
-  background: var(--primary-color);
-  color: var(--hover-color);
-  text-shadow: none;
+    background: var(--primary-color);
+    color: var(--hover-color);
+    text-shadow: none;
 }
 
 ::selection {
-  background: var(--primary-color);
-  color: var(--hover-color);
+    background: var(--primary-color);
+    color: var(--hover-color);
 }
 
 hr {
-  /* Fix 10: explicit separator color (#6c7086) so horizontal rules read as
+    /* Fix 10: explicit separator color (#6c7086) so horizontal rules read as
      deliberate dividers rather than relying on the muted border-color. */
-  color: #6c7086;
-  background: none;
-  margin: 1.2rem auto;
+    color: #6c7086;
+    background: none;
+    margin: 1.2rem auto;
 }
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 /* use colored hovering */
 a:hover {
-  background-color: var(--primary-color);
-  color: var(--hover-color);
+    background-color: var(--primary-color);
+    color: var(--hover-color);
 }
 
 /* hover link with child elements (e.g. code) */
 a:hover > code {
-  background-color: var(--primary-color);
-  color: var(--hover-color);
-  /* disable the border + vertical padding */
-  border: none;
-  padding: 0 .2em;
+    background-color: var(--primary-color);
+    color: var(--hover-color);
+    /* disable the border + vertical padding */
+    border: none;
+    padding: 0 0.2em;
 }
 
 /* disable colored hovering for video in /talks */
 a.talk-video:hover {
-  background-color: transparent;
-  color: inherit;
+    background-color: transparent;
+    color: inherit;
 }
 
 /* Only have colored links inside the text */
 main a {
-  border-bottom: 2px solid var(--primary-color);
-  /* Make sure the underline is at the top */
-  position: relative; /* needed for z-index */
-  z-index: 1;
+    border-bottom: 2px solid var(--primary-color);
+    /* Make sure the underline is at the top */
+    position: relative; /* needed for z-index */
+    z-index: 1;
 }
 
 /* Disable colored links in: .meta, header (socials, theme toggle), /talks, /projects, .post-header */
@@ -327,27 +339,27 @@ main .meta a,
 main .talks-grid a,
 main .cards a,
 main .post-header a {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 /* Don't display border on zola internal links on headers */
 main .zola-anchor {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 time {
-  color: var(--text-1);
+    color: var(--text-1);
 }
 /* change the line-through color */
 del {
-  text-decoration-color: var(--primary-color);
-  text-decoration-thickness: 3px;
+    text-decoration-color: var(--primary-color);
+    text-decoration-thickness: 3px;
 }
 
 /* MathJax display containers — allow horizontal scroll on small screens */
 .MathJax_Display,
 .MJXc-display,
 .MathJax_SVG_Display {
-  overflow-x: auto;
-  overflow-y: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
 }

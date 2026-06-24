@@ -20,7 +20,7 @@
    explicitly here makes the intent obvious and insulates the post body
    from future global font-weight changes. */
 .body {
-    font-weight: 400;
+    font-weight: 420;
 }
 blockquote {
     border-left: 3px solid var(--primary-color);
@@ -672,6 +672,7 @@ code {
     border-radius: 5px;
     border: 1px solid var(--border-color);
     font-family: var(--code-font);
+    margin-block: 0.1rem;
 }
 
 pre {
@@ -754,4 +755,9 @@ pre.giallo code {
     height: 16px;
     fill: currentColor;
     pointer-events: none;
+}
+
+.body ul > li,
+.body ol > li {
+    margin-block: 0.13rem;
 }
