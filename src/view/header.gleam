@@ -11,6 +11,7 @@
 //// GitHub Pages under `/arata` do not request assets from the domain root.
 
 import config.{type Config}
+import effect/theme as theme_effect
 import gleam/list
 import gleam/option
 import gleam/string
@@ -29,6 +30,8 @@ import route.{type Route, Home, Links, Page, Post, Posts, Projects, Tag, Tags}
 pub fn view(
   site_config: Config,
   current_route: Route,
+  current_theme: theme_effect.Theme,
+  effective_dark: Bool,
   on_toggle_theme: Attribute(msg),
   on_open_search: Attribute(msg),
   on_toggle_menu: Attribute(msg),
@@ -65,7 +68,14 @@ pub fn view(
           True -> [view_search_button(site_config, on_open_search)]
           False -> []
         },
-        [view_theme_toggle(site_config, on_toggle_theme)],
+        [
+          view_theme_toggle(
+            site_config,
+            current_theme,
+            effective_dark,
+            on_toggle_theme,
+          ),
+        ],
       ]),
     ),
   ])
@@ -271,35 +281,42 @@ fn view_search_button(
 
 fn view_theme_toggle(
   site_config: Config,
+  current_theme: theme_effect.Theme,
+  _effective_dark: Bool,
   on_toggle: Attribute(msg),
 ) -> Element(msg) {
+  let #(icon_path, icon_id, icon_alt) = case current_theme {
+    theme_effect.Light -> #("/icons/sun.svg", "sun-icon", "Light")
+
+    theme_effect.Dark -> #("/icons/moon.svg", "moon-icon", "Dark")
+
+    theme_effect.Auto -> #("/icons/auto.svg", "auto-icon", "Auto")
+  }
+
   html.button(
     [
       attribute.id("dark-mode-toggle"),
       attribute.class("theme-toggle"),
+      attribute.attribute("aria-label", "Toggle theme"),
+      attribute.title("Toggle theme"),
       on_toggle,
     ],
     [
       html.img([
-        attribute.src(resolve_site_url(site_config, "/icons/sun.svg")),
-        attribute.id("sun-icon"),
-        attribute.alt("Light"),
-        attribute.style("display", "none"),
-      ]),
-      html.img([
-        attribute.src(resolve_site_url(site_config, "/icons/moon.svg")),
-        attribute.id("moon-icon"),
-        attribute.alt("Dark"),
-        attribute.style("display", "none"),
-        attribute.style("filter", "invert(1)"),
-      ]),
-      html.img([
-        attribute.src(resolve_site_url(site_config, "/icons/auto.svg")),
-        attribute.id("auto-icon"),
-        attribute.alt("Auto"),
+        attribute.src(resolve_site_url(site_config, icon_path)),
+        attribute.id(icon_id),
+        attribute.alt(icon_alt),
         attribute.style("display", "block"),
-        attribute.style("filter", "invert(1)"),
+        attribute.style("filter", theme_icon_filter(current_theme)),
       ]),
     ],
   )
+}
+
+fn theme_icon_filter(theme: theme_effect.Theme) -> String {
+  case theme {
+    theme_effect.Light -> "none"
+    theme_effect.Dark -> "invert(1)"
+    theme_effect.Auto -> "invert(1)"
+  }
 }

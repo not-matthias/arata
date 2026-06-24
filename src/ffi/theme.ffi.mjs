@@ -38,32 +38,24 @@ export function set_theme(mode) {
 }
 
 /// Apply the theme to the DOM: toggle the `dark`/`light` classes on <html>.
-/// `auto` resolves against the system preference. Also toggles the visibility
-/// of the sun/moon/auto icons in the nav toggle.
+/// `auto` resolves against the system preference.
+///
+/// Important:
+/// Theme-toggle icon rendering is owned by Lustre (`view/header.gleam`).
+/// Do not mutate sun/moon/auto icon display or filter here, otherwise the FFI
+/// can race against Lustre's virtual DOM and show the wrong icon after refresh.
 export function apply_theme(mode) {
   const useDark =
     mode === "dark" || (mode === "auto" && get_system_prefers_dark());
+
   const html = document.documentElement;
+
   if (useDark) {
     html.classList.remove("light");
     html.classList.add("dark");
   } else {
     html.classList.remove("dark");
     html.classList.add("light");
-  }
-  // Toggle icon visibility (sun for light, moon for dark, auto for auto).
-  const sun = document.getElementById("sun-icon");
-  const moon = document.getElementById("moon-icon");
-  const auto = document.getElementById("auto-icon");
-  if (sun) sun.style.display = mode === "light" ? "block" : "none";
-  if (moon) moon.style.display = mode === "dark" ? "block" : "none";
-  if (auto) {
-    auto.style.display = mode === "auto" ? "block" : "none";
-    if (mode === "auto") {
-      auto.style.filter = get_system_prefers_dark() ? "invert(1)" : "invert(0)";
-    } else {
-      auto.style.filter = "none";
-    }
   }
 }
 

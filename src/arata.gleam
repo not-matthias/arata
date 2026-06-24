@@ -656,6 +656,8 @@ fn view(model: Model) -> Element(Msg) {
             header.view(
               model.config,
               model.route,
+              model.theme,
+              is_effective_dark(model.theme, model.system_prefers_dark),
               event.on_click(UserToggledTheme),
               event.on_click(UserOpenedSearch),
               event.on_click(UserToggledMobileMenu),
