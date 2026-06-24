@@ -15,6 +15,7 @@ subtitle = "Welcome to demo site of arata"
 - Remarkable performance
 - Comments (Giscus/Utterances)
 - MathJax rendering (configurable)
+- Image lightbox gallery for posts
 - Mobile-responsive with hamburger menu
 - Custom homepage (Just you're looking at)
 - CSS modular loading (10 separate stylesheets)

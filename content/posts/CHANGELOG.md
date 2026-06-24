@@ -27,9 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added page-local gallery navigation.
   - Supports previous/next navigation.
   - Supports keyboard controls:
-    - `Escape` closes the lightbox.
-    - `ArrowLeft` moves to the previous image.
-    - `ArrowRight` moves to the next image.
+    1. `Escape` closes the lightbox.
+    2. `ArrowLeft` moves to the previous image.
+    3. `ArrowRight` moves to the next image.
   - Includes image counter and caption display.
 
 - Added mobile-friendly lightbox controls.
@@ -157,9 +157,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Expanded the `base_url` section.
   - Documented how `Config.base_path` is derived from `SiteMeta.base_url`.
   - Added examples for:
-    - root-domain deployments
-    - subdirectory deployments
-    - GitHub Pages project sites
+    1. root-domain deployments
+    2. subdirectory deployments
+    3. GitHub Pages project sites
   - Clarified that config paths should remain logical root-relative paths, while arata applies `base_path` at the output/runtime layer.
 
 - Simplified the gleeunit entrypoint.
