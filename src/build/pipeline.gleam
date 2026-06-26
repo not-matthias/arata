@@ -148,9 +148,8 @@ fn write(path: String, content: String) -> Nil {
 }
 
 /// Copy each CSS module listed in `css_modules` to `dist/css/` as a separate
-/// file (true on-demand loading). Each file is loaded by its own `<link>` tag
-/// in `index.html`, so the browser can fetch them in parallel and cache them
-/// independently. A missing module is logged but does not abort the build.
+/// minified file. The inlined shell CSS uses the same minification path so the
+/// emitted `index.html`, `404.html`, and debug CSS modules stay consistent.
 fn build_css() -> Nil {
   let _ = simplifile.create_directory_all(dist_dir <> "/css")
 
@@ -161,11 +160,12 @@ fn build_css() -> Nil {
       |> list.last
       |> result.unwrap("unknown.css")
 
-    case simplifile.copy(path, dist_dir <> "/css/" <> filename) {
-      Ok(_) -> Nil
+    case simplifile.read(path) {
+      Ok(css) -> write(dist_dir <> "/css/" <> filename, minify_css(css))
+
       Error(e) ->
         io.println(
-          "Warning: could not copy CSS module "
+          "Warning: could not read CSS module "
           <> path
           <> ": "
           <> simplify_error(e),
@@ -227,7 +227,7 @@ fn bundle_spa() -> Nil {
     <> shim_path
     <> " --outfile "
     <> dist_dir
-    <> "/app.mjs --minify --target=browser 2>/dev/null"
+    <> "/app.mjs --target=browser --minify --sourcemap=none 2>/dev/null"
 
   case run_command(cmd) {
     0 -> Nil
@@ -403,17 +403,137 @@ fn inline_css() -> String {
   css_modules
   |> list.map(fn(path) {
     case simplifile.read(path) {
-      Ok(css) -> "/* " <> path <> " */\n" <> sanitize_style_text(css)
+      Ok(css) -> css |> minify_css |> sanitize_style_text
 
-      Error(_) -> "/* Warning: could not inline " <> path <> " */"
+      Error(_) -> ""
     }
   })
-  |> string.join("\n\n")
+  |> string.join("")
 }
 
 fn sanitize_style_text(css: String) -> String {
   css
   |> string.replace("</style", "<\\/style")
+}
+
+type CssScanState {
+  CssOutside
+  CssComment
+  CssString(quote: String, escaped: Bool)
+}
+
+fn minify_css(css: String) -> String {
+  css
+  |> strip_css_comments
+  |> collapse_css_whitespace
+  |> trim_css_spaces_around_tokens
+  |> string.trim
+}
+
+fn strip_css_comments(css: String) -> String {
+  css
+  |> string.to_graphemes
+  |> strip_css_comments_loop(CssOutside, [])
+  |> list.reverse
+  |> string.join("")
+}
+
+fn strip_css_comments_loop(
+  chars: List(String),
+  state: CssScanState,
+  acc: List(String),
+) -> List(String) {
+  case chars {
+    [] -> acc
+
+    [char, ..rest] ->
+      case state {
+        CssOutside ->
+          case char {
+            "/" ->
+              case rest {
+                ["*", ..tail] -> strip_css_comments_loop(tail, CssComment, acc)
+                _ -> strip_css_comments_loop(rest, CssOutside, [char, ..acc])
+              }
+
+            "\"" ->
+              strip_css_comments_loop(rest, CssString("\"", False), [
+                char,
+                ..acc
+              ])
+
+            "'" ->
+              strip_css_comments_loop(rest, CssString("'", False), [char, ..acc])
+
+            _ -> strip_css_comments_loop(rest, CssOutside, [char, ..acc])
+          }
+
+        CssComment ->
+          case char {
+            "*" ->
+              case rest {
+                ["/", ..tail] -> strip_css_comments_loop(tail, CssOutside, acc)
+                _ -> strip_css_comments_loop(rest, CssComment, acc)
+              }
+
+            _ -> strip_css_comments_loop(rest, CssComment, acc)
+          }
+
+        CssString(quote, escaped) -> {
+          let next_state = case escaped {
+            True -> CssString(quote, False)
+
+            False ->
+              case char {
+                "\\" -> CssString(quote, True)
+                _ ->
+                  case char == quote {
+                    True -> CssOutside
+                    False -> CssString(quote, False)
+                  }
+              }
+          }
+
+          strip_css_comments_loop(rest, next_state, [char, ..acc])
+        }
+      }
+  }
+}
+
+fn collapse_css_whitespace(css: String) -> String {
+  css
+  |> string.replace("\r\n", "\n")
+  |> string.replace("\r", "\n")
+  |> string.replace("\n", " ")
+  |> string.replace("\t", " ")
+  |> collapse_repeated_spaces
+}
+
+fn collapse_repeated_spaces(css: String) -> String {
+  let compacted = string.replace(css, "  ", " ")
+
+  case compacted == css {
+    True -> compacted
+    False -> collapse_repeated_spaces(compacted)
+  }
+}
+
+fn trim_css_spaces_around_tokens(css: String) -> String {
+  css
+  |> string.replace(" {", "{")
+  |> string.replace("{ ", "{")
+  |> string.replace(" }", "}")
+  |> string.replace("} ", "}")
+  |> string.replace(" :", ":")
+  |> string.replace(": ", ":")
+  |> string.replace(" ;", ";")
+  |> string.replace("; ", ";")
+  |> string.replace(" ,", ",")
+  |> string.replace(", ", ",")
+  |> string.replace(" >", ">")
+  |> string.replace("> ", ">")
+  |> string.replace("( ", "(")
+  |> string.replace(" )", ")")
 }
 
 /// The custom `index.html` with FOUC prevention: both `light` and `dark`
@@ -440,36 +560,30 @@ fn index_html(site_meta: site.SiteMeta, site_config: config.Config) -> String {
 
   let feed_links = case site_meta.rss_enabled {
     True ->
-      "  <link rel='alternate' type='application/atom+xml' href='"
+      "<link rel='alternate' type='application/atom+xml' href='"
       <> atom_href
-      <> "'>
-  <link rel='alternate' type='application/rss+xml' href='"
+      <> "'><link rel='alternate' type='application/rss+xml' href='"
       <> rss_href
-      <> "'>
-"
+      <> "'>"
 
     False -> ""
   }
 
   let css = inline_css()
 
-  "<!DOCTYPE html>
-<html lang='en' class='dark light'>
-<head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>" <> site_meta.title <> "</title>
-  <meta name='description' content='" <> site_meta.description <> "'>
-  <link rel='icon' href='" <> favicon <> "'>
-" <> feed_links <> "  <style id='arata-css'>
-" <> css <> "
-  </style>
-</head>
-<body>
-  <div id='app'><div style='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg-0);color:var(--text-1);font-family:sans-serif;'>Loading…</div></div>
-  <script type='module' src='" <> app_src <> "'></script>
-</body>
-</html>"
+  "<!DOCTYPE html><html lang='en' class='dark light'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>"
+  <> site_meta.title
+  <> "</title><meta name='description' content='"
+  <> site_meta.description
+  <> "'><link rel='icon' href='"
+  <> favicon
+  <> "'>"
+  <> feed_links
+  <> "<style id='arata-css'>"
+  <> css
+  <> "</style></head><body><div id='app'><div style='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg-0);color:var(--text-1);font-family:sans-serif;'>Loading…</div></div><script type='module' src='"
+  <> app_src
+  <> "'></script></body></html>"
 }
 
 /// The 404.html page: the SPA shell, identical to `index.html`.
