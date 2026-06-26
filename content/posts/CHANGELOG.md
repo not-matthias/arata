@@ -15,6 +15,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.4.2] — 2026-06-26
+
+### Added
+
+- Added configurable navbar pinning via `navbar_fixed`.
+  - `True` keeps the navbar sticky at the top of the viewport.
+  - `False` makes the navbar scroll away with the page content.
+  - Existing behavior is preserved by default.
+
+- Added documentation for `navbar_fixed` in the configuration guide.
+
+### Changed
+
+- Reworked `aratafetch` into a compact terminal-style homepage summary.
+  - Replaced the previous side-by-side ASCII/stat layout with a stacked CLI-style layout.
+  - Added shell prompt output:
+
+    ```txt
+    [root@arata:~]$ aratafetch
+    ```
+
+  - Added support for rendering site metadata rows such as:
+    - `site_title`
+    - `base_url`
+    - `description`
+  - Updated row order to match the current compact output:
+
+    ```txt
+    links
+    posts
+    words
+    projects
+    tags
+    site_title
+    base_url
+    description
+    maintain
+    ```
+
+  - Omitted unavailable rows:
+    - numeric rows are hidden when their value is `0`
+    - text rows are hidden when empty
+    - optional rows are hidden when `None`
+
+- Updated `aratafetch` styling so it appears as a compact floating terminal window.
+  - The block now shrink-wraps its content instead of stretching across the full page width.
+  - Small-screen behavior is improved to avoid horizontal scrolling for normal summary output.
+
+- Refined navbar styling.
+  - Slightly reduced the visual size of the navbar.
+  - Reduced spacing, icon sizes, and typography scale for a more compact header.
+
+- Centered mobile hamburger menu items.
+  - Navigation links, search button, and theme toggle are now centered inside the mobile dropdown.
+
+- Refined floating ToC overlay styling.
+  - Reduced overlay footprint so it no longer covers most of the viewport.
+  - Constrained width on larger screens.
+  - Improved compactness on smaller screens.
+  - Hid native browser scrollbars while preserving scroll behavior.
+
+- Hid native browser scrollbars in the right sidebar / sidebar ToC while preserving scroll behavior.
+
+- Cleaned up CSS organization and comments.
+  - Moved ToC-specific scrollbar rules into `toc.css`.
+  - Updated comments in `toc.css` and `components.css` to reflect current ownership.
+  - Removed duplicate pre-Lightbox CSS rules that were overridden by the canonical Lightbox section.
+
+### Build
+
+- Minified emitted CSS during the static build pipeline.
+  - Removed inline CSS source markers from generated shell HTML.
+  - Stripped CSS block comments.
+  - Compacted CSS whitespace and safe token spacing.
+  - Minified CSS before inlining into `index.html` and `404.html`.
+  - Emitted minified CSS modules under `dist/css/`.
+  - Kept existing Bun `--minify` behavior for `dist/app.mjs`.
+
+- Reduced generated `index.html` size from approximately `85.7 kB` to `47.3 kB`.
+
+### Documentation
+
+- Updated configuration documentation for:
+  - `navbar_fixed`
+  - terminal-style `aratafetch`
+  - omitted zero/empty aratafetch rows
+  - updated aratafetch output order and example
+
+### Commits
+
+- `feat(aratafetch): render compact terminal-style site summary`
+- `style(css): refine navigation and ToC styling`
+- `build: minify emitted CSS during static pipeline`
+- `style(nav): center mobile hamburger menu items`
+- `docs(config): document navbar_fixed behavior`
+- `feat(config): add configurable navbar pinning`
+
+---
+
 ## [v1.4.1] — 2026-06-26
 
 ### Added
