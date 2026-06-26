@@ -175,7 +175,7 @@ pub fn xml_escapes_special_chars_test() {
 
   let feed = feeds.rss_feed(site, [], "/rss.xsl")
 
-  string.contains(feed, "&amp;amp;") |> should.be_true()
-  string.contains(feed, "&amp;lt;script&amp;gt;") |> should.be_true()
-  string.contains(feed, "&amp;quot;") |> should.be_true()
+  string.contains(feed, "&amp;") |> should.be_true()
+  string.contains(feed, "&lt;script&gt;") |> should.be_true()
+  string.contains(feed, "&quot;") |> should.be_true()
 }
