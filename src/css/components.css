@@ -541,3 +541,78 @@ html.lightbox-open,
 body.lightbox-open {
     overflow: hidden;
 }
+
+/* =========================================================================
+   Aratafetch
+   -------------------------------------------------------------------------
+   Neofetch-style homepage summary rendered as a compact floating terminal
+   window. The `<pre>` shrink-wraps its CLI output instead of stretching to
+   the full content width, similar to a floating window in a Wayland WM.
+   ========================================================================= */
+
+.aratafetch {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 100%;
+    margin: 2rem 0;
+}
+
+.aratafetch-pre {
+    box-sizing: border-box;
+
+    /* Floating-window behavior: shrink to content, but never overflow page. */
+    display: inline-block;
+    width: fit-content;
+    max-width: min(100%, 42rem);
+
+    margin: 0;
+    padding: 0.95rem 1.05rem;
+
+    overflow-x: auto;
+    white-space: pre;
+
+    font-family: var(--code-font);
+    font-size: 0.92rem;
+    line-height: 1.45;
+
+    color: var(--text-0);
+    background: var(--bg-1);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Hide native scrollbar while keeping the terminal scrollable as an emergency
+   fallback for very long site titles or maintenance strings. */
+.aratafetch-pre {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.aratafetch-pre::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .aratafetch {
+        margin: 1.5rem 0;
+    }
+
+    .aratafetch-pre {
+        max-width: 100%;
+        padding: 0.85rem 0.9rem;
+        font-size: 0.82rem;
+        line-height: 1.4;
+
+        /*
+         * The new aratafetch output stacks ASCII art above stats, so small
+         * screens can safely wrap long values without breaking a side-by-side
+         * layout.
+         */
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+}

@@ -109,9 +109,9 @@ pub type Config {
 /// Hardcoded default site metadata used by the build pipeline and SPA runtime.
 pub fn site_meta() -> SiteMeta {
   SiteMeta(
-    base_url: "https://yonzilch.github.io",
+    base_url: "https://yonzilch.github.io/arata",
     title: "Arata",
-    description: "Arata is a modern and minimalistic blog theme powered by Gleam and Lustre.",
+    description: "A modern and minimalistic blog theme",
     analytics: AnalyticsDisabled,
     comments: CommentsDisabled,
     fediverse_creator: None,
@@ -130,11 +130,11 @@ pub fn default() -> Config {
     description: meta.description,
     base_path: base_path,
     menu: [
+      MenuItem(name: "about", url: with_base_path(base_path, "/about")),
+      MenuItem(name: "links", url: with_base_path(base_path, "/links")),
       MenuItem(name: "posts", url: with_base_path(base_path, "/posts")),
       MenuItem(name: "projects", url: with_base_path(base_path, "/projects")),
-      MenuItem(name: "links", url: with_base_path(base_path, "/links")),
       MenuItem(name: "tags", url: with_base_path(base_path, "/tags")),
-      MenuItem(name: "about", url: with_base_path(base_path, "/about")),
     ],
     // The RSS social link is only added when `rss_enabled` is `True`. Fix
     // 9b/10: the URL is absolute (`/atom.xml`) so it resolves correctly on
