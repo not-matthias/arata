@@ -315,28 +315,23 @@ When `True`, post pages render the right sidebar containing:
 
 When `False`, the right sidebar is omitted and the post body gets more space.
 
-### `floating_buttons_enabled`
-
-A `Bool`.
-
-When `True`, post pages render the floating ToC/tags button and overlay.
-
-When `False`, the floating button and overlay are omitted.
-
 ### `aratafetch_enabled` and `aratafetch_maintained_for`
 
-`aratafetch` is an optional neofetch-style homepage summary block. When
+`aratafetch` is an optional terminal-style homepage summary block. When
 enabled, it is rendered at the bottom of the homepage content, after the
 Markdown body from `content/pages/home.md`.
 
-It gives visitors a compact ASCII-style overview of the site, including:
+It gives visitors a compact CLI-style overview of the site. Depending on the
+available site data, it can include:
 
-* site title
+* friend link count
 * published post count
 * total word count
-* unique tag count
-* friend link count
 * project count
+* unique tag count
+* site title
+* base URL
+* site description
 * optional maintenance display string
 
 Example configuration:
@@ -348,7 +343,7 @@ Config(
   aratafetch_enabled: True,
   aratafetch_maintained_for: Some("since 2026-06-21"),
 )
-```
+````
 
 Disable it with:
 
@@ -360,7 +355,7 @@ When disabled, the homepage renders exactly as before and no aratafetch DOM is
 emitted.
 
 `aratafetch_maintained_for` is an `Option(String)` rendered as-is in the
-`maintained` row.
+`maintain` row.
 
 Examples:
 
@@ -376,21 +371,52 @@ aratafetch_maintained_for: Some("2 years")
 aratafetch_maintained_for: None
 ```
 
-When `None`, the `maintained` row displays `n/a`.
+When `None`, the `maintain` row is omitted.
 
 The statistics are computed from the already-loaded runtime content model:
 
+* `link_count` is based on loaded friend links.
 * `post_count` counts published posts only.
 * draft posts are excluded.
 * `word_count` sums `Post.word_count`.
-* `tag_count` counts unique tags case-insensitively.
-* `link_count` is based on loaded friend links.
 * `project_count` is based on loaded projects.
+* `tag_count` counts unique tags case-insensitively.
+
+Rows with unavailable or empty values are omitted from the rendered output:
+
+* numeric rows such as `posts`, `words`, `tags`, `links`, and `projects` are
+  omitted when their value is `0`.
+* text rows such as `site_title`, `base_url`, and `description` are omitted
+  when empty.
+* optional rows such as `maintain` are omitted when set to `None`.
+
+Example output:
+
+```txt
+[root@arata:~]$ aratafetch
+
+        /\
+       /  \
+      / /\ \
+     / ____ \
+    /_/    \_\
+
+links        5
+posts        10
+words        17182
+projects     4
+tags         11
+site_title   Arata
+base_url     https://yonzilch.github.io/arata
+description  Arata is a modern and minimalistic blog theme
+maintain     since 2026-06-21
+```
 
 aratafetch does not currently display comment counts.
 
-> External comment systems, such as Giscus or Utterances do not provide a reliable static local count in
-> arata's current data model, so comment statistics are intentionally omitted until a stable data source is added.
+> External comment systems, such as Giscus or Utterances, do not provide a
+> reliable static local count in arata's current data model, so comment
+> statistics are intentionally omitted until a stable data source is added.
 
 ### `latest_posts_enabled` and `latest_posts_count`
 
